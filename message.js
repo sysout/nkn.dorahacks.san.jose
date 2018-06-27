@@ -101,6 +101,13 @@ function msg(obj){
     );
   }
 
+  function sendAddress(sendTo, resp_msg) {
+    client.send(
+      sendTo,
+      JSON.stringify({type: "bitcoinAddress", data: resp_msg})
+    );
+  }
+
   function sendFile(sendTo, file) {
       // read binary data
       console.log("sending " + file + " to " + sendTo);
@@ -143,7 +150,7 @@ function msg(obj){
         if (data.type && data.type.indexOf("/") >= 0){
           var type = data.type.split("/")[0];
         } else {
-          var type = "txt";
+          var type = data.type;
         }
         if (type === "image"){
           var item = document.createElement("div");
@@ -173,13 +180,11 @@ function msg(obj){
               let address = address0FromXpub.derivePath("0/"+cur).keyPair.getAddress()
               localStorage.setItem(address, src + " " + file);
               localStorage.setItem('derivePath', cur);
-              resp_msg = ">Please pay 500 satoshi to " + address;
+              sendAddress(src, address);
+              resp_msg = ">Please pay 600 satoshi to " + address;
               resp_msg += "\n>After the payment, get my picture like this: /paid " + address;
             }
-            client.send(
-              src,
-              JSON.stringify({type: "txt", data: resp_msg})
-            )
+            sendMsg(src, resp_msg);
             {
               var item = document.createElement("div");
               item.innerText = data.data;
@@ -195,7 +200,7 @@ function msg(obj){
             let info = localStorage.getItem(address);
             if (info){
               loadJSON(`https://blockchain.info/q/addressbalance/${address}`, (a,b) => {
-                if (parseInt(a) > 500){
+                if (parseInt(a) > 600){
                   let idx = info.indexOf(" ");
                   sendFile(info.substr(0, idx), fileMap[info.substr(idx + 1)]);
                 } else {
@@ -207,7 +212,7 @@ function msg(obj){
               sendMsg(src, "invalid address:" + address);
             }
           } else if (data.data.startsWith("/ls") || data.data.startsWith("/help")){
-            let resp_msg = "Please pay at least 500 satoshi to buy my pictures:"
+            let resp_msg = "Please pay at least 600 satoshi to buy my pictures:"
             for(var key in fileMap){
               resp_msg += " " + key;
               /* use key/value for intended purpose */
