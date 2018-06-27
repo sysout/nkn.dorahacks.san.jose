@@ -1,19 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Chat Example</title>
+    <script src="p5.js"></script>
+    <script src="nkn.js"></script>
+    <script src="message.js"></script>
+    <style type="text/css">
+    html {
+      overflow: hidden;
+    }
+
+    body {
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      min-height: 100vh;
+      background: lightgray;
+    }
+
+    #log {
+      height: 60vh;
+      background-color: antiquewhite;
+      padding: 50px;
+      overflow: scroll;
+    }
+
+
+    #form {
+    }
+
+
+    </style>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div id="log"></div>
+    <form id="form" enctype="multipart/form-data">
+      <input id="fileupload" name="myfile" type="file"/>
+      <input type="text" id="msg" size="64"/>
+      <input type="submit" value="Send" />
+    </form>
 
     <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
+    if (localStorage.getItem("identifier") === null) {
+      localStorage.setItem("identifier", "Xiong");
+    }
+    if (localStorage.getItem("privateKey") === null) {
+      let client = nkn();
+      localStorage.setItem("privateKey", client.key.privateKey);
+    }
+    var identifier = localStorage.getItem('identifier');
+    var privateKey = localStorage.getItem('privateKey');
+    console.log("using identifier:" + identifier);
+    console.log("using privateKey:" + privateKey);
+    var msg = msg({
+      identifier: identifier,
+      privateKey: privateKey,
+      sendTo: "1.02134979d67f28cd7ec461000f20261201b9734ec5bec8690d3f739b9d3bcb49f6"
+    });
+    require('./renderer.js')
     </script>
   </body>
 </html>

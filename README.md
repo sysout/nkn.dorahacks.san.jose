@@ -1,3 +1,12 @@
+# dorahack nkn decentralized digital store
+```bash
+npm install bitcoinjs-lib
+npm i bip39
+npm install file-type
+npm i electron-context-menu
+```
+- when you start the app, you can change the private key buy `localStorage.setItem('privateKey', 'your_key');`
+
 # electron-quick-start
 
 **Clone and run for a quick way to see Electron in action.**
